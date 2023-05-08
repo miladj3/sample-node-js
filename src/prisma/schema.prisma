@@ -11,10 +11,10 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  name     String
-  wallet   Wallet?
-  walletId Int     @unique
+  id          Int          @id @default(autoincrement())
+  name        String
+  wallet      Wallet?
+  transaction Transaction?
 
   @@map("users")
 }
@@ -28,4 +28,14 @@ model Wallet {
   updatedAt DateTime @updatedAt
 
   @@map("balances")
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  amount    BigInt
+  createdAt DateTime @default(now())
+
+  @@map("transactions")
 }
