@@ -23,7 +23,7 @@ model Wallet {
   id        Int      @id @default(autoincrement())
   userId    Int      @unique
   user      User     @relation(fields: [userId], references: [id])
-  balance   BigInt   @default(0)
+  balance   Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -34,7 +34,7 @@ model Transaction {
   id        Int      @id @default(autoincrement())
   userId    Int      @unique
   user      User     @relation(fields: [userId], references: [id])
-  amount    BigInt
+  amount    Int
   createdAt DateTime @default(now())
 
   @@map("transactions")
