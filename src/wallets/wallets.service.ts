@@ -12,11 +12,19 @@ export class WalletsService implements IWalletsService {
     private readonly repository: IWalletsRepository,
   ) {}
 
-  async addMoney(userId: number, amount: number): Promise<number> {
-    const balance = await this.getBalance(userId);
-    const isValidTransaction = balance + amount >= 0;
-    if (isValidTransaction) return this.repository.addMoney(userId, amount);
-    throw new Error('Invalid amount: Not enough money in your wallet.');
+  addMoney(userId: number, amount: number): Promise<number> {
+    return new Promise((resolve, reject) => {
+      // handling wallet lock
+      setTimeout(async () => {
+        const balance = await this.getBalance(userId);
+        const isValidTransaction = balance + amount >= 0;
+        if (isValidTransaction) {
+          resolve(await this.repository.addMoney(userId, amount));
+        } else {
+          reject(new Error('Invalid amount: Not enough money in your wallet.'));
+        }
+      }, Math.round(Math.random() * 200));
+    });
   }
 
   getBalance(userId: number): Promise<number> {

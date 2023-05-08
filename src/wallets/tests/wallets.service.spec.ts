@@ -56,5 +56,11 @@ describe('BalancesService', () => {
         'Invalid amount',
       );
     });
+    it('should handle transaction isolation (wallet lock)', async () => {
+      await service.addMoney(12, 100);
+      await expect(
+        Promise.all([service.addMoney(12, -100), service.addMoney(12, -100)]),
+      ).rejects.toThrowError('Invalid amount');
+    });
   });
 });
