@@ -3,13 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TransactionsModule } from './transactions/transactions.module';
-import { BalancesModule } from './balances/balances.module';
+import { WalletsModule } from './wallets/wallets.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TransactionsModule,
-    BalancesModule,
+    WalletsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
