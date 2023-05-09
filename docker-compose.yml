@@ -1,0 +1,53 @@
+version: '1.0'
+services:
+  gateway:
+    container_name: gw
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    ports:
+      - ${GATEWAY_SERVICE_PORT}:${GATEWAY_SERVICE_PORT}
+    env_file:
+      - .env
+    depends_on:
+      - wallet
+  transaction:
+    container_name: tr
+    build:
+      context: ./transaction
+      dockerfile: Dockerfile
+    ports:
+      - ${TRANSACTION_SERVICE_PORT}:${TRANSACTION_SERVICE_PORT}
+    env_file:
+      - .env
+    depends_on:
+      - db
+  wallet:
+    container_name: wl
+    build:
+      context: ./wallet
+      dockerfile: Dockerfile
+    ports:
+      - ${WALLET_SERVICE_PORT}:${WALLET_SERVICE_PORT}
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - transaction
+  db:
+    image: mysql:8.0.32
+    container_name: inventory
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_DB_PASSWORD}
+    env_file:
+      - .env
+    ports:
+      - '3309:3306'
+    expose:
+      - '3309'
+    volumes:
+      - my-db:/var/lib/mysql
+volumes:
+  my-db:
+    driver: local
