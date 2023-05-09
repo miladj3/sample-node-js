@@ -1,27 +1,27 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { Inject, Injectable } from "@nestjs/common";
+import { ClientProxy } from "@nestjs/microservices";
 
 @Injectable()
 export class WalletService {
   constructor(@Inject('WALLET_SERVICE') private readonly client: ClientProxy) {}
 
   async getBalance(userId: number) {
-    const { error, ...data } = await this.client
+    const result = await this.client
       .send({ cmd: 'get-balance' }, { userId })
       .toPromise();
-    if (error) return { error };
+    if (result.error) return { error: result.error };
     return {
-      balance: data,
+      balance: result,
     };
   }
 
   async addMoney(userId: number, amount: number) {
-    const { error, ...data } = await this.client
-      .send({ cmd: 'add-money' }, { userId, amount })
+    const result = await this.client
+      .send({ cmd:"add-money"' }, { userId, amount })
       .toPromise();
-    if (error) return { error };
+    if (result.error) return { error: result.error };
     return {
-      reference_id: data,
+      reference_id: result
     };
   }
 }
