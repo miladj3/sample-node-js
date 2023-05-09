@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WalletService } from '../wallet.service';
-import { WALLETS_SERVICE_TOKEN } from '../interfaces/wallets.service';
+import { WALLET_SERVICE_TOKEN } from '../interfaces/wallet.service';
 import {
-  IWalletsRepository,
-  WALLETS_REPOSITORY_TOKEN,
-} from '../interfaces/wallets.repository';
+  IWalletRepository,
+  WALLET_REPOSITORY_TOKEN,
+} from '../interfaces/wallet.repository';
 
-class MockedRepository implements IWalletsRepository {
+class MockedRepository implements IWalletRepository {
   private wallet = new Map();
 
   async addMoney(userId: number, amount: number): Promise<number> {
@@ -27,17 +27,17 @@ describe('BalancesService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {
-          provide: WALLETS_SERVICE_TOKEN,
+          provide: WALLET_SERVICE_TOKEN,
           useClass: WalletService,
         },
         {
-          provide: WALLETS_REPOSITORY_TOKEN,
+          provide: WALLET_REPOSITORY_TOKEN,
           useClass: MockedRepository,
         },
       ],
     }).compile();
 
-    service = module.get<WalletService>(WALLETS_SERVICE_TOKEN);
+    service = module.get<WalletService>(WALLET_SERVICE_TOKEN);
   });
 
   describe('addMoney', () => {
@@ -61,6 +61,21 @@ describe('BalancesService', () => {
       await expect(
         Promise.all([service.addMoney(12, -100), service.addMoney(12, -100)]),
       ).rejects.toThrowError('Invalid amount');
+    });
+    it('should add money to the wallet', async () => {
+      const addedMoney = 10_000_000;
+      await service.addMoney(13, addedMoney);
+      const balance = await service.addMoney(13, addedMoney);
+      expect(balance).toEqual(addedMoney * 2);
+    });
+
+    it('should take money from wallet', async () => {
+      const addedMoney = 100;
+      const takenMoney = -10;
+      const expectedMoneyInWallet = 90;
+      await service.addMoney(13, addedMoney);
+      const balance = await service.addMoney(13, takenMoney);
+      expect(balance).toEqual(expectedMoneyInWallet);
     });
   });
 });
