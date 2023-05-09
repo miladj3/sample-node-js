@@ -1,19 +1,17 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { WalletService } from './wallet.service';
+import { Controller, Get, Param, Post } from "@nestjs/common";
+import { WalletService } from "./wallet.service";
+import { GetBalanceDto } from "./dtos/get-balance.dto";
 
 @Controller('wallets')
 export class WalletsController {
   constructor(private readonly walletService: WalletService) {}
 
   @Get('balance')
-  async getBalance(@Param('user_id') userId: number) {
-    return this.walletService.getBalance(userId);
+  async getBalance(@Param() body: GetBalanceDto) {
+    return this.walletService.getBalance(body.userId);
   }
 
-  @Post('addMoney')
-  async addMoney(
-    @Body() { user_id: userId, amount }: { user_id: number; amount: number },
-  ) {
-    return this.walletService.addMoney(userId, amount);
+  @Post('ad"addMoney" async addMoney(@Body() body: AddMoneyDto) {
+    return this.walletService.addMoney(body.userId, body.amount);
   }
 }
