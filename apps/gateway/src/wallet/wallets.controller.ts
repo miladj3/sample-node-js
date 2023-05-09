@@ -1,6 +1,7 @@
-import { Controller, Get, Param, Post } from "@nestjs/common";
-import { WalletService } from "./wallet.service";
-import { GetBalanceDto } from "./dtos/get-balance.dto";
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { WalletService } from './wallet.service';
+import { GetBalanceDto } from './dtos/get-balance.dto';
+import { AddMoneyDto } from './dtos/add-money.dto';
 
 @Controller('wallets')
 export class WalletsController {
@@ -11,7 +12,8 @@ export class WalletsController {
     return this.walletService.getBalance(body.userId);
   }
 
-  @Post('ad"addMoney" async addMoney(@Body() body: AddMoneyDto) {
+  @Post('addMoney')
+  async addMoney(@Body() body: AddMoneyDto) {
     return this.walletService.addMoney(body.userId, body.amount);
   }
 }

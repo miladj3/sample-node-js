@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { ClientProxy } from "@nestjs/microservices";
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class WalletService {
@@ -17,11 +17,11 @@ export class WalletService {
 
   async addMoney(userId: number, amount: number) {
     const result = await this.client
-      .send({ cmd:"add-money"' }, { userId, amount })
+      .send({ cmd: 'add-money' }, { userId, amount })
       .toPromise();
     if (result.error) return { error: result.error };
     return {
-      reference_id: result
+      reference_id: result,
     };
   }
 }
